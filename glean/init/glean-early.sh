@@ -40,8 +40,8 @@ fi
 if [ -n "$CONFIG_DRIVE_LABEL" ]; then
     # Mount config drive
     mkdir -p /mnt/config
-    BLOCKDEV="$(blkid -L ${CONFIG_DRIVE_LABEL})"
-    TYPE="$(blkid -t LABEL=${CONFIG_DRIVE_LABEL} -s TYPE -o value)"
+    BLOCKDEV="$(blkid -t LABEL=${CONFIG_DRIVE_LABEL} -o device | sort -r | head -n 1)"
+    TYPE="$(blkid ${BLOCKDEV} -s TYPE -o value)"
     if [[ "${TYPE}" == 'vfat' ]]; then
         mount -t vfat -o umask=0077 "${BLOCKDEV}" /mnt/config || true
     elif [[ "${TYPE}" == 'iso9660' ]]; then
